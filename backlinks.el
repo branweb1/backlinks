@@ -161,6 +161,7 @@
                (kill-buffer buff)))))
 
 ;; API
+;;;###autoload
 (defun backlinks--refresh-backlinks ()
   "Generate backlinks data structures by crawling nodes dir."
   (interactive)
@@ -169,6 +170,7 @@
     (setq backlinks-titles (cadr graphs))
     (backlinks--write-to-file backlinks-data-file graphs)))
 
+;;;###autoload
 (defun backlinks--show-backlinks ()
   "Display backlinks."
   (interactive)
