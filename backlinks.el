@@ -168,7 +168,8 @@
   (let ((graphs (backlinks--create-backlinks-graph)))
     (setq backlinks-graph (car graphs))
     (setq backlinks-titles (cadr graphs))
-    (backlinks--write-to-file backlinks-data-file graphs)))
+    (backlinks--write-to-file backlinks-data-file graphs)
+    (message "Backlinks refreshed.")))
 
 ;;;###autoload
 (defun backlinks--show-backlinks ()
