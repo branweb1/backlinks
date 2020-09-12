@@ -40,13 +40,13 @@
 (defvar backlinks-titles nil)
 
 ;; filesystem
-(defun backlinks--dotfile-p (fname)
-  "Predicate to determine if FNAME is a dotfile."
-  (string= "." (substring fname 0 1)))
+(defun backlinks--dotfile-p (filename)
+  "Predicate to determine if FILENAME is a dotfile."
+  (string= "." (substring filename 0 1)))
 
-(defun backlinks--orgfile-p (fname)
-  "Predicate to determine if FNAME is an org file."
-  (string= "org" (downcase (file-name-extension fname))))
+(defun backlinks--orgfile-p (filename)
+  "Predicate to determine if FILENAME is an org file."
+  (string= "org" (downcase (file-name-extension filename))))
 
 (defun backlinks--ensure-trailing-slash (dirname)
   "Add trailing / to DIRNAME if it is not there."
@@ -54,16 +54,16 @@
    dirname
    (when (not (string= "/" (substring dirname -1))) "/")))
 
-(defun backlinks--relpath->abspath (fname)
-  "Convert FNAME to an absolute path."
-  (concat (backlinks--ensure-trailing-slash backlinks-notes-directory) fname))
+(defun backlinks--relpath->abspath (filename)
+  "Convert FILENAME to an absolute path."
+  (concat (backlinks--ensure-trailing-slash backlinks-notes-directory) filename))
 
 (defun backlinks--get-orgfiles ()
   "Retrieve all org files in notes directory."
   (seq-filter
-   (lambda (fname)
-     (and (not (backlinks--dotfile-p fname))
-          (backlinks--orgfile-p fname)))
+   (lambda (filename)
+     (and (not (backlinks--dotfile-p filename))
+          (backlinks--orgfile-p filename)))
    (directory-files backlinks-notes-directory nil)))
 
 ;; parsing
@@ -98,21 +98,21 @@
   (let ((backlinks-ht (make-hash-table :test 'equal))
         (title-ht (make-hash-table :test 'equal))
         (open-buffer-filepaths (backlinks--get-open-buffers)))
-    (dolist (fname (backlinks--get-orgfiles))
+    (dolist (filename (backlinks--get-orgfiles))
       (with-current-buffer
-          (find-file-noselect (backlinks--relpath->abspath fname))
+          (find-file-noselect (backlinks--relpath->abspath filename))
         (let ((ast (org-element-parse-buffer)))
           (dolist (link (backlinks--extract-links-from-ast ast))
             (puthash
              link
-             (cons fname (gethash link backlinks-ht))
+             (cons filename (gethash link backlinks-ht))
              backlinks-ht))
           (puthash
-           fname
-           (backlinks--extract-title-from-ast ast fname)
+           filename
+           (backlinks--extract-title-from-ast ast filename)
            title-ht))
         ;; don't kill if it was already open when we ran this
-        (when (not (member fname open-buffer-filepaths))
+        (when (not (member filename open-buffer-filepaths))
           (kill-buffer))))
     (values backlinks-ht title-ht)))
 
