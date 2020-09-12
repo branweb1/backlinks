@@ -53,6 +53,10 @@
   "Predicate to determine if FILENAME is an org file."
   (string= "org" (downcase (file-name-extension filename))))
 
+(defun backlinks--has-extension-p (str)
+  "Predicate to determine if STR ends in a file extension."
+  (file-name-extension str))
+
 (defun backlinks--ensure-trailing-slash (dirname)
   "Add trailing / to DIRNAME if it is not there."
   (concat
@@ -80,7 +84,14 @@
             (org-element-property :value kw))) nil t)
       fallback))
 
-;; TODO filter out non-org links?
+(defun backlinks--extract-org-links-from-ast (ast)
+  "Extract all links to org files from AST."
+  (seq-filter
+   (lambda (link)
+     (and (backlinks--has-extension-p link)
+          (backlinks--orgfile-p link)))
+   (backlinks--extract-links-from-ast ast)))
+
 (defun backlinks--extract-links-from-ast (ast)
   "Extract all links from AST."
   (org-element-map ast 'link
@@ -107,7 +118,7 @@
       (with-current-buffer
           (find-file-noselect (backlinks--relpath->abspath filename))
         (let ((ast (org-element-parse-buffer)))
-          (dolist (link (backlinks--extract-links-from-ast ast))
+          (dolist (link (backlinks--extract-org-links-from-ast ast))
             (puthash
              link
              (cons filename (gethash link backlinks-ht))
