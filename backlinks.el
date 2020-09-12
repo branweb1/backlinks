@@ -1,8 +1,8 @@
-;;; backlinks.el --- Minor mode to display backlinks to current buffer  -*- lexical-binding: t; -*-
+;;; backlinks.el --- Minor mode to display backlinks in new buffer  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020
 
-;; Author:  <branweb1@gmail.com>
+;; Author:  Brandon Webster <branweb1@gmail.com>
 ;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -20,14 +20,19 @@
 
 ;;; Commentary:
 
-;;
+;; Finds backlinks to an org file in a flat notes directory.
+;; If you are at file A, files B and C are backlinks if they link to A.
+;; Works by creating a graph of backlinks and writing it to a text file.
+;; File loaded into memory on first request for backlinks, and subsequent
+;; requests read from memory.  If notes have TITLE keyword, it's value is
+;; dispayed in the backlinks buffer.  Otherwise it falls back to the file
+;; name.
 
 ;;; Code:
 (require 'seq)
 
 ;; TODO auto-create nonexisting links
 ;; TODO find emacs dir for backlinks-data-file
-;; TODO find empty files
 ;; TOOD add text preview to backlinks buffer
 ;; variables
 (defcustom backlinks-notes-directory (concat (getenv "HOME") "/notes")
@@ -135,6 +140,7 @@
       (insert-file-contents filename)
       (> 0 (buffer-size (current-buffer))))))
 
+;; TODO remove the messages here
 (defun backlinks--load-backlinks-data ()
   "Try loading backlinks data from memory, then from file."
   (cond ((and backlinks-graph backlinks-titles)
