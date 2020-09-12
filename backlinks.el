@@ -32,15 +32,20 @@
 (require 'seq)
 
 ;; TODO auto-create nonexisting links
-;; TODO find emacs dir for backlinks-data-file
 ;; TOOD add text preview to backlinks buffer
 ;; variables
+(defgroup backlinks nil
+  "Finder of backlinks for org files"
+  :group 'org)
+
 (defcustom backlinks-notes-directory (concat (getenv "HOME") "/notes")
   "The notes directory, a flat directory of org files."
-  :type 'string)
+  :type 'string
+  :group 'backlinks)
 (defcustom backlinks-data-file (concat (getenv "HOME") "/.emacs.d/backlinks.txt")
   "The location of the text file where the backlinks graph is saved."
-  :type 'string)
+  :type 'string
+  :group 'backlinks)
 (defvar backlinks-graph nil)
 (defvar backlinks-titles nil)
 
