@@ -217,15 +217,19 @@
         (insert "\n\n"))
       (switch-to-buffer (current-buffer)))))
 
+(defvar backlinks-command-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "l") #'backlinks-show-backlinks)
+    (define-key map (kbd "r") #'backlinks-refresh-backlinks)
+    map))
+
+(defvar backlinks-key-map (make-sparse-keymap))
 
 ;;;###autoload
 (define-minor-mode backlinks-mode
   "Finder of backlinks"
   :lighter " BL"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "C-c b l") 'backlinks-show-backlinks)
-            (define-key map (kbd "C-c b r") 'backlinks-refresh-backlinks)
-            map))
+  :keymap backlinks-key-map)
 
 ;;;###autoload
 (add-hook 'org-mode 'backlinks-mode)

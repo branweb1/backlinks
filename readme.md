@@ -17,11 +17,14 @@ dispayed in the backlinks buffer.  Otherwise it falls back to the file
     (add-to-list 'load-path "path/to/backlinks")
     (require 'backlinks)
     (setq backlinks-notes-directory "path/to/notes_directory")
+    (define-key backlinks-key-map (kbd "C-c b") backlinks-command-map)
+
+**Note**: The keymap prefix of `C-c b` is just a suggestion.
 
 
 ## Usage
 
-When viewing an org file:
+When viewing an org file (assuming you are using the default keymap prefix of `C-c b`:
 
 -   **`C-c b r`:** generate backlinks for all files
 -   **`C-c b l`:** view generated backlinks for file
