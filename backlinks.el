@@ -169,7 +169,7 @@
            (message "loading backlinks data from file")
            hashes))
         (t (message "generating backlinks data from filesystem")
-           (backlinks--refresh-backlinks)
+           (backlinks-refresh-backlinks)
            (values backlinks-graph backlinks-titles))))
 
 ;; rendering
@@ -184,7 +184,7 @@
 
 ;; API
 ;;;###autoload
-(defun backlinks--refresh-backlinks ()
+(defun backlinks-refresh-backlinks ()
   "Generate backlinks data structures by crawling nodes dir."
   (interactive)
   (let ((graphs (backlinks--create-backlinks-graph)))
@@ -194,7 +194,7 @@
     (message "Backlinks refreshed.")))
 
 ;;;###autoload
-(defun backlinks--show-backlinks ()
+(defun backlinks-show-backlinks ()
   "Display backlinks."
   (interactive)
   (let* ((hashes (backlinks--load-backlinks-data))
@@ -223,8 +223,8 @@
   "Finder of backlinks"
   :lighter " BL"
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "C-c b l") 'backlinks--show-backlinks)
-            (define-key map (kbd "C-c b r") 'backlinks--refresh-backlinks)
+            (define-key map (kbd "C-c b l") 'backlinks-show-backlinks)
+            (define-key map (kbd "C-c b r") 'backlinks-refresh-backlinks)
             map))
 
 ;;;###autoload
