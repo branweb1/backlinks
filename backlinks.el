@@ -42,7 +42,7 @@
   "The notes directory, a flat directory of org files."
   :type 'string
   :group 'backlinks)
-(defcustom backlinks-data-file (concat (getenv "HOME") "/.emacs.d/backlinks.txt")
+(defcustom backlinks-data-file (concat user-emacs-directory "backlinks.txt")
   "The location of the text file where the backlinks graph is saved."
   :type 'string
   :group 'backlinks)
